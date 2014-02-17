@@ -1,0 +1,10 @@
+{
+    "name": "cc98",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "request":"latest",
+        "cheerio": "latest",
+        "iconv-lite":"latest"
+    }
+}

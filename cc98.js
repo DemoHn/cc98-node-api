@@ -1,0 +1,459 @@
+var config  = require("./config");
+var errorSolver = require("./errorSolver");
+
+var request = require("request");
+var cheerio = require("cheerio");
+var crypto  = require("crypto");
+var iconv   = require("iconv-lite");
+var qs      = require("querystring");
+var url     = require("url");
+var async   = require("async");
+var util    = require("util");
+
+var cc98 = function(){
+  var that = this;
+  var req = request.defaults({jar:true});
+  var _cookie = req.jar();
+
+  this.request = req;
+
+  this.rootHost = "www.cc98.org";
+
+  this.cookie = _cookie;
+  this.loginStatus = 0; //0表示未登录,1表示已登录
+
+  if(config != undefined){
+    that.configure(config);
+  }
+
+};
+
+cc98.prototype.configure = function(config){
+  this.rootHost = config.defaults.root;
+  this.user = config.user;
+  this.password = config.password;
+};
+
+cc98.prototype.login = function(callback){
+  //这份返回值列表可以从hhtp://cc98.org/js/common.js中找到
+  var that = this;
+  var LOGIN_SUCCESS = 9898,
+      USER_NOT_EXIST = 1001,
+      USER_LOCKED = 1002,
+      PASSWORD_ERROR = 1003,
+      USERNAME_NULL = 101,
+      PASSWORD_NULL = 102,
+      XMLHTTP_ERROR = 103;
+
+  // 设置返回值格式：
+  //status 0 or 1
+  //spec  详细说明
+  var return_data = {
+    status:0,
+    spec:""
+  };
+
+  var hash = crypto.createHash("md5");
+  var hash_result = "";
+  if(this.password !== ""){
+    hash.update(this.password);
+    hash_result = hash.digest("hex");
+  }
+
+  var req_opt = {
+    method : "POST",
+    uri:"http://"+this.rootHost+"/sign.asp",
+    form:{
+      "a":"i",
+      "p":hash_result,
+      "u":this.user,
+      "userhidden":2
+    }
+  };
+
+  this.request(req_opt,function(e,r,body){
+
+    if(e){
+      errorSolver.err(e);
+    }
+
+    return_data.timestamp = new Date();
+    if(body == LOGIN_SUCCESS){
+      that.loginStatus = 1;
+      return_data.status = 1;
+      return_data.spec = "success!";
+    }else if(body == PASSWORD_ERROR){
+
+      return_data.spec = "password error!";
+
+    }//TODO to fullfill all the situations
+    else{
+      return_data.spec = body;
+    }
+    if(r.headers['set-cookie'] != null){
+      that.cookie.add(r.headers['set-cookie']);
+      that.cookie = that.cookie[0];
+    }
+
+    callback(return_data);
+  });
+};
+
+cc98.prototype.getBoard = function(callback){
+  var req_opt = {
+    method:"GET",
+    uri:"http://"+this.rootHost,
+    jar:this.cookie
+  };
+
+  var board_model = {
+    timestamp:new Date(1970,1,1),
+    board:[] // board_infos
+  };
+
+  var board_info = {
+    name:"",
+    boardid:"",
+    boardNumber:"",
+    boardManager:"", //版务
+    todayPosts:"",   //今日发帖量
+    totalPosts:""    //总发帖量
+  };
+
+  this.request(req_opt,function(e,r,body){
+
+    if(e){
+      errorSolver.err(e);
+      callback();
+    }else{
+      var $ = cheerio.load(body);
+      var board_main = $("table.tableBorder1").eq(1).find("tr table");
+      board_main.each(function(index,elem){
+
+        var href = $(elem).find("a").attr("href");
+
+        board_info= {
+          boardid : url.parse(href).query.match(/(?!boardid=)[0-9]+/)[0],
+          name : $(elem).find("a > font").text(),
+          boardNumber : $(elem).find("span").text(),
+          boardManager : $(elem).find("a").eq(1).text(),
+          todayPosts : $(elem).find("font").eq(1).text(),
+          totalPosts : /[0-9]+/.exec($(elem).find("td").eq(3).text())[0]
+        };
+        board_model.board.push(board_info);
+      });
+      board_model.timestamp = new Date();
+      callback(board_model);
+    }
+  });
+};
+
+// 得到一个板块内所有的帖子列表
+cc98.prototype.getAllPostList = function(
+  boardid,
+  min_page,
+  max_page,
+  callback ){
+
+  var that = this;
+  var json_url = {
+    protocol:"http",
+    host:that.rootHost,
+    pathname:"list.asp",
+    query:{
+      boardid:boardid,
+      page:1 //默认为1,在后来的操作中会修改
+    }
+  };
+
+
+  // 每一页的数据模型
+  var page_list_model = {
+    timestamp:new Date(1970,1,1),
+    pageNumber:1,
+    list:[]
+  };
+
+  var page_list_spec = {
+    topicName:"",
+    topicStatus:"",
+    postId:"",
+    author:"",
+    replyNum:"",
+    visitNum:"",
+    lastReply:""
+  };
+  // 从第一页抓取到的数据
+  var first_page_info = {
+    totalPages:0,
+    todayPosts:0,
+    boardid:boardid
+  };
+
+  var _FirstPageInfo =function(callback){
+    var req_opt = {
+      method:"GET",
+      uri:url.format(json_url)
+    };
+    that.request(req_opt,function(e,r,body){
+      if(e){
+        throw e;
+        errorSolver.err(e);
+        callback();
+      }else{
+        var $ = cheerio.load(body);
+        /*页面总信息的读取*/
+        first_page_info.totalPages = $("form[name=batch]").next().find("td b").eq(1).html();
+        first_page_info.todayPosts = $("font[color=#FF0000]").html();//第一个红字
+        callback(first_page_info);
+      }
+    });
+  };
+
+  var _getPage = function(page_number,callback){
+    json_url.query.page = page_number;
+
+    var req_opt = {
+      method:"GET",
+      uri:url.format(json_url)
+    };
+    // 每一页的数据模型
+    var page_list_model = {
+      timestamp:new Date(1970,1,1),
+      pageNumber:1,
+      list:[]
+    };
+    that.request(req_opt,function(e,r,body){
+      if(e){
+        throw e;
+        page_list_model.timestamp = new Date();
+        page_list_model.pageNumber = page_number;
+        callback(page_list_model);
+      }
+      var $ = cheerio.load(body);
+
+      var post_main = $("form[name=batch] tr");
+      var reg_reply = /([0-9]+)\s?\/\s?([0-9]+)/;
+
+       post_main.each(function(index,elem){
+        var reply_text = $(elem).find("td").eq(3).text();
+         var reply_time=$(elem).find("td").eq(4).text();
+        var href = $(elem).find("td").eq(1).find("a").attr("href");
+
+        /*第一个和第二个都是标题*/
+        if(index >=3){
+          /* <tr> 里有5个<td>标签,其中第1个表示帖子状态,第二个表示题目,第三个是作者,第四个是回复,第五个是最后更新*/
+          var reply_number = "";
+          var visit_number = "";
+          var reply_timestamp = "";
+          var reg_time = /\d\d\d\d\/\d{1,2}\/\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}/;
+          if(reg_reply.test(reply_text) === true){
+            reply_number = reg_reply.exec(reply_text)[1];
+            visit_number = reg_reply.exec(reply_text)[2];
+          }
+
+          if(reg_time.test(reply_time) === true){
+            reply_timestamp = reply_time.match(reg_time)[0];
+          }
+          page_list_spec = {
+            topicName:$(elem).find("td").eq(1).find('a span').text(),
+            topicStatus:$(elem).find("td").eq(0).find('span').attr("title"),
+            postId:url.parse(href).query.match(/(?![0-9]+&ID=)[0-9]+/i)[0],
+            author:$(elem).find("td").eq(2).find('a').text(),
+            replyNum:reply_number,
+            visitNum:visit_number,
+            lastReply:reply_timestamp
+          };
+          page_list_model.list.push(page_list_spec);
+        }
+      });
+
+      page_list_model.timestamp = new Date();
+      page_list_model.pageNumber = page_number;
+      callback(page_list_model);
+    });
+  };
+
+  _FirstPageInfo(function(data){
+    var tmp_list = [];
+
+    max_page = max_page>data.totalPages?data.totalPages:max_page;
+    for(var j=min_page;j<=max_page;j++){
+      tmp_list.push(j);
+    }
+
+    var final_pages = [];
+    final_pages.push(data);
+    async.each(tmp_list,function(li,callback){
+      _getPage(li,function(data){
+        final_pages.push(data);
+        callback();
+      });
+    },function(err){
+      if(err){
+        throw err;
+      }
+      callback(final_pages);
+    });
+  });
+};
+
+cc98.prototype.getPostInfo = function(
+  boardid, /*帖子所在的boardid*/
+  postid, /*帖子的id*/
+  min_page,
+  max_page,
+  callback ){
+
+  //发帖心情
+  //cc98在每发一个帖子之前都会要求发一个心情(也就是帖子前面的那个小图标)
+  //不过现在看来大家都喜欢用7号图标,也就是什么都没有~~
+  var that = this;
+  var _page_number;
+  var json_url = {
+    protocol:"http",
+    host:that.rootHost,
+    pathname:"dispbbs.asp",
+    query:{
+      boardid:boardid,
+      id:postid,
+      replyID:postid,
+      star:1
+    }
+  };
+  // 每一页的数据模型
+  var page_list_model = {
+    timestamp:new Date(1970,1,1),
+    pageNumber:1,
+    list:[]
+  };
+
+  var page_list_spec = {
+    author:"",
+    postTime:"",
+    face:"",
+    subTitle:"",
+    info:""
+  };
+  // 从第一页抓取到的数据
+  var first_page_info = {
+    totalPosts:0
+  };
+  /*得到了页面的总数.注意,在这个函数运行后才能写下来最多页面是多少*/
+  var _getMaxPageNumber = function(callback){
+    var req_opt = {
+      method:"GET",
+      uri:url.format(json_url)
+    };
+    that.request(req_opt,function(e,r,body){
+      if(e){
+        callback();
+      }else{
+        var $ = cheerio.load(body);
+        first_page_info.totalPosts = $("span#topicPagesNavigation b").html();
+        var postsNumber = $("span#topicPagesNavigation b").html();
+        if(first_page_info.totalPosts == null){
+          errorSolver.warning("当前页面总数没有成功读取,可能会出现因max的参数过大而导致的冗余");
+          callback();
+        }else{
+          callback(postsNumber);
+        }
+      }
+    });
+  };
+
+  var _getPage = function(page_number,callback){
+
+    var page_list_model = {
+      timestamp:new Date(1970,1,1),
+      pageNumber:1,
+      list:[]
+    };
+
+    json_url.query.star = page_number;
+    var req_opt = {
+      method:"GET",
+      uri:url.format(json_url)
+    };
+    that.request(req_opt,function(e,r,body){
+      if(e){
+        throw e;
+        page_list_model.timestamp = new Date();
+        page_list_model.pageNumber = page_number;
+        callback(page_list_model);
+      }
+      var $ = cheerio.load(body);
+
+      var post_main = $("body table");
+      // 搜索具体的信息
+      var post_time_array = [];
+
+      $("body").find("a").each(function(index,elem){
+        /*通过查看ip的链接来进行发帖时间的跟踪操作*/
+        var href_ip = $(elem).attr("href");
+        /*这里要注意的是,抓包下来的时间格式和我们在网上见到的不是一回事*/
+        var timestamp_reg = /\d\d\d\d\/\d{1,2}\/\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}/;
+        /*用了些黑科技,因为已知在"查看链接"的那个标签的旁边就是我们想要的时间数据*/
+        if(/look_ip.asp/.test(href_ip) === true){
+          if($(elem).parent().html().match(timestamp_reg) != undefined){
+            post_time_array.push($(elem).parent().html().match(timestamp_reg)[0]);
+          }
+        }
+      });
+
+      var post_info_main = $("table.tableborder1");
+      post_info_main.each(function(index,elem){
+
+        var reg_face_pic = /[0-9]+/;
+        var str_face_pic = $(elem).find("blockquote img").attr("src");
+        if(reg_face_pic.test(str_face_pic) != false){
+          str_face_pic = str_face_pic.match(reg_face_pic)[0];
+        }
+
+        /*第0个是无价值的信息*/
+        if(index>=1 && index<=post_time_array.length){
+          page_list_spec = {
+            postTime:post_time_array[index-1],
+            author:$(elem).find("a b").text(),
+            face:str_face_pic,
+            subTitle:$(elem).find("blockquote b").text(),
+       //     subTitle:"",
+            info:$(elem).find("blockquote span").text()
+          };
+          page_list_model.list.push(page_list_spec);
+        }
+
+      });
+
+      page_list_model.timestamp = new Date();
+      page_list_model.pageNumber = page_number;
+      callback(page_list_model);
+    });
+  };
+
+  _getMaxPageNumber(function(postsNumber){
+    var tmp_list = [];
+    postsNumber = Math.floor(postsNumber/10)+1;
+    max_page = max_page>postsNumber?postsNumber:max_page;
+
+    for(var j=min_page;j<=max_page;j++){
+      tmp_list.push(j);
+    }
+
+    var final_pages = [];
+    final_pages.push(first_page_info);
+    async.each(tmp_list,function(li,callback){
+      _getPage(li,function(data){
+        final_pages.push(data);
+        callback();
+      });
+    },function(err){
+      if(err){
+        throw err;
+      }
+      callback(final_pages);
+    });
+  });
+};
+
+module.exports = cc98;
