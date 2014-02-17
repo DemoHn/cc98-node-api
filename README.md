@@ -22,7 +22,7 @@ cc98.login(function(data){
 ```
 ## 函数说明
 
-# cc98.login(callback)
+### cc98.login(callback)
 
 说明:用自己的帐号登录cc98.虽然做为一名游客,API仍就能够正常工作.
 请注意自己的配置设置.
@@ -49,7 +49,7 @@ data = {
       XMLHTTP_ERROR = 103;
 ```
 
-# cc98.getBoard(callback)
+### cc98.getBoard(callback)
 
 说明:返回首页上各版的信息.
 
@@ -74,14 +74,14 @@ data = {
 }
 
 ```
-# cc98.getAllPostList(boardid,min_page,max_page,callback)
+### cc98.getAllPostList(boardid,min_page,max_page,callback)
 
 说明: 抓取到某个版块中所有的帖子标题信息.
 参数:
-`boardid` : 版块的ID.这个可以见于每个版块所对应的URL中,或者getBoard()所返回的函数.
-`min_page`: 抓取的最小页数.最小为1.
-`max_page`: 抓取的最大页数.很不幸,即使不知道这个版块有多少页,这个参数也得填.不过当你真的想把所有页都搞下来的话,写`Infinity`吧.
-`callback`: 是一个函数.形如`callback(data)`的格式.
+`boardid` : 版块的ID.这个可以见于每个版块所对应的URL中,或者getBoard()所返回的函数.<br>
+`min_page`: 抓取的最小页数.最小为1.<br>
+`max_page`: 抓取的最大页数.很不幸,即使不知道这个版块有多少页,这个参数也得填.不过当你真的想把所有页都搞下来的话,写`Infinity`吧.<br>
+`callback`: 是一个函数.形如`callback(data)`的格式.<br>
 
 其中,data是一段json数据,格式如下:
 
@@ -114,15 +114,15 @@ data = {
 ]
 ```
 
-# cc98.getPostInfo(boardid,postid,min_page,max_page,callback)
+### cc98.getPostInfo(boardid,postid,min_page,max_page,callback)
 
 说明 : 把一个帖子里的所有内容给抓下来.
 
-`boardid` : 版块的ID.这个可以见于每个版块所对应的URL中,或者getBoard()所返回的函数.这是98一个很神经的地方.这个参数必须要要.
+`boardid` : 版块的ID.这个可以见于每个版块所对应的URL中,或者getBoard()所返回的函数.这是98一个很神经的地方.这个参数必须要要.<br>
 `postid`  : 这个帖子的ID.在URL中可见(形如 `ID=***` 的格式),也可以在getAllPostList()中获得.
-`min_page`: 抓取的最小页数.最小为1.
-`max_page`: 抓取的最大页数.很不幸,即使不知道这个版块有多少页,这个参数也得填.不过当你真的想把所有页都搞下来的话,写`Infinity`吧.
-`callback`: 是一个函数.形如`callback(data)`的格式.
+`min_page`: 抓取的最小页数.最小为1.<br>
+`max_page`: 抓取的最大页数.很不幸,即使不知道这个版块有多少页,这个参数也得填.不过当你真的想把所有页都搞下来的话,写`Infinity`吧.<br>
+`callback`: 是一个函数.形如`callback(data)`的格式.<br>
 
 其中,data是一段json数据,格式如下:
 
@@ -155,10 +155,9 @@ data = {
 
 __附注:__ 这里稍微说明一下list中各参数的含义:
 
-`postTime` : 发这个帖子的时间.
-`author`   : 发这个帖子的user ID.
-`face`     : 在98中每发一个帖子都会默认选定一个'发帖心情',默认为7.这个数字是从它的图片名字中提出来的.
+`postTime` : 发这个帖子的时间.<br>
+`author`   : 发这个帖子的user ID.<br>
+`face`     : 在98中每发一个帖子都会默认选定一个'发帖心情',默认为7.这个数字是从它的图片名字中提出来的.<br>
 
-`subTitle` : 紧接着face后面的小标题.一般除了首楼上会发这个玩意儿之外别的楼都不会发.
-`info`     : 帖子的内容.注意是UBB格式.
-
+`subTitle` : 紧接着face后面的小标题.一般除了首楼上会发这个玩意儿之外别的楼都不会发.<br>
+`info`     : 帖子的内容.注意是UBB格式.<br>
