@@ -14,7 +14,7 @@ var cc98 = new _98();
   console.log(data[1].list[1]);
 });*/
 
-cc98.getChildBoard(462,function(data){
+cc98.Top10(function(data){
   console.log(data);
 });
 cc98.getAllPostList(68,1,3,function(data){

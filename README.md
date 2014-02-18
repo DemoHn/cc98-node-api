@@ -92,8 +92,9 @@ data = {
                         boardid:String,         //版的boardid(用于写URL)
                         hasChildBoard:Boolean,  //看看有没有子版
                         boardManager:Array,    //版务
-                        todayPosts:String,      //今日发帖量
-                        totalPosts:String       //总发贴量
+                        todayPosts:Number,      //今日发帖量
+                        totalTopics:Number      //总共话题数
+                        totalPosts:Number       //总发贴量
                 },
                 
                 ...
@@ -188,3 +189,33 @@ __附注:__ 这里稍微说明一下list中各参数的含义:
 
 `subTitle` : 紧接着face后面的小标题.一般除了首楼上会发这个玩意儿之外别的楼都不会发.<br>
 `info`     : 帖子的内容.注意是UBB格式.<br>
+
+
+### cc98.Top10(callback)
+
+说明:返回98的十大帖子.
+
+返回数据:形如 `callback(data)` 的格式, `data` 为以下格式的json数据:
+
+```
+{
+        timestamp:new Date(),  //收到数据的时间
+        posts:
+        [
+                {
+                            rank:Number,  //排名
+                            name:String,  //帖子标题
+                            author:String, //作者
+                            boardid:"", //帖子所属板块ID
+                            postid:"", //帖子ID
+                            postTime:Date, //发贴时间
+                            focus:"", //关注人数
+                            replyPosts:"", //回帖数
+                            hit:""  //点击
+                },
+                
+                ...
+        ]
+}
+
+```

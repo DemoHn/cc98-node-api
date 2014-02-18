@@ -210,6 +210,7 @@ cc98.prototype.getChildBoard = function(
             hasChildBoard: _hasChildBoard(),
             boardManager : _getManager(),
             todayPosts : Number($(elem).find("td").eq(2).find("img[src='pic/Forum_today.gif']").parent().text()),
+            totalTopics: Number($(elem).find("td").eq(2).find("img[src='pic/forum_topic.gif']").parent().text()),
             totalPosts : Number($(elem).find("td").eq(2).find("img[src='pic/Forum_post.gif']").parent().text())
           };
 
@@ -220,7 +221,6 @@ cc98.prototype.getChildBoard = function(
       callback(board_model);
     }
   });
-
 };
 
 // 得到一个板块内所有的帖子列表
@@ -492,7 +492,6 @@ cc98.prototype.getPostInfo = function(
             author:$(elem).find("a b").text(),
             face:str_face_pic,
             subTitle:$(elem).find("blockquote b").text(),
-       //     subTitle:"",
             info:$(elem).find("blockquote span").text()
           };
           page_list_model.list.push(page_list_spec);
@@ -528,6 +527,79 @@ cc98.prototype.getPostInfo = function(
       }
       callback(final_pages);
     });
+  });
+};
+
+
+//98十大
+cc98.prototype.Top10 = function(
+  callback){
+  var req_opt = {
+    method:"GET",
+    uri:"http://"+this.rootHost+"/hottopic.asp",
+    jar:this.cookie
+  };
+
+  var posts_model = {
+    timestamp:new Date(1970,1,1),
+    posts:[] // 十大的帖子
+  };
+
+  var posts_info = {
+    rank:1,  //排名
+    name:"",
+    author:"",
+    boardid:"", //帖子所属板块ID
+    postid:"", //帖子ID
+    postTime:new Date(1970,1,1), //发贴时间
+    focus:"", //关注人数
+    replyPosts:"", //回帖数
+    hit:""  //点击
+  };
+
+  this.request(req_opt,function(e,r,body){
+
+    if(e){
+      errorSolver.err(e);
+      callback();
+    }else{
+      var $ = cheerio.load(body);
+
+      var _main = $("table.tableBorder1").eq(0).children();
+      _main.each(function(index,elem){
+
+        function _parselink(uri){
+          if(uri){
+            var qs = url.parse(uri,true,true);
+            return {
+              boardid : qs.query.boardid,
+              postid: qs.query.id
+            };
+          }else{
+            return {boardid:null,postid:null};
+          }
+        }
+
+        if(index >= 1 && index <= 10){
+
+          posts_info = {
+            rank : index,
+            name : $(elem).find("table a font").html(),
+            author: $(elem).find("table a").eq(2).html(),
+            boardid: _parselink($(elem).find("table a").attr("href")).boardid,
+            postid:_parselink($(elem).find("table a").attr("href")).postid,
+            postTime:new Date($(elem).find("table span").attr("title")),
+            focus: $(elem).children().eq(2).html(),
+            replyPosts:$(elem).children().eq(3).html(),
+            hit:$(elem).children().eq(4).html()
+          };
+          posts_model.posts.push(posts_info);
+        }
+
+      });
+      posts_model.timestamp = new Date();
+      callback(posts_model);
+    }
   });
 };
 
