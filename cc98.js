@@ -148,6 +148,81 @@ cc98.prototype.getBoard = function(callback){
   });
 };
 
+//得到子板块列表
+cc98.prototype.getChildBoard = function(
+  boardid,
+  callback){
+  var req_opt = {
+    method:"GET",
+    uri:"http://"+this.rootHost+"/list.asp?boardid="+boardid,
+    jar:this.cookie
+  };
+
+  var board_model = {
+    timestamp:new Date(1970,1,1),
+    board:[] // board_infos
+  };
+
+  var board_info = {
+    name:"",
+    intro:"",    //子版简介
+    boardid:"",
+    hasChildBoard:false,
+    boardManager:[], //版务,可能有多位
+    todayPosts:"",   //今日发帖量
+    totalPosts:""    //总发帖量
+  };
+
+  this.request(req_opt,function(e,r,body){
+
+    if(e){
+      errorSolver.err(e);
+      callback();
+    }else{
+      var $ = cheerio.load(body);
+
+      var board_main = $("table.tableBorder1").eq(0).find("tr table");
+      board_main.each(function(index,elem){
+
+        //以数组形式获得版主名字
+        function _getManager(){
+          var m_array =[];
+
+          var info = $(elem).find("td").eq(2).find("td").eq(4).find("a");
+
+          info.each(function(index,elem){
+            m_array.push($(elem).text());
+          });
+          return m_array;
+        }
+
+        function _hasChildBoard(){
+          var info = $(elem).find("td").eq(2).find("a").parent().find("span").eq(1).html();
+          return info == null ? false : true;
+        }
+
+        if(index % 3 === 0){
+
+          board_info= {
+            boardid : $(elem).find("td").eq(2).find("a").attr('href').match(/[0-9]+/)+"",
+            name : $(elem).find("td").eq(2).find("a span").html(),
+            intro : $(elem).find("td").eq(2).find("td").eq(3).text(),
+            hasChildBoard: _hasChildBoard(),
+            boardManager : _getManager(),
+            todayPosts : Number($(elem).find("td").eq(2).find("img[src='pic/Forum_today.gif']").parent().text()),
+            totalPosts : Number($(elem).find("td").eq(2).find("img[src='pic/Forum_post.gif']").parent().text())
+          };
+
+          board_model.board.push(board_info);
+        }
+      });
+      board_model.timestamp = new Date();
+      callback(board_model);
+    }
+  });
+
+};
+
 // 得到一个板块内所有的帖子列表
 cc98.prototype.getAllPostList = function(
   boardid,

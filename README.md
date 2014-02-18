@@ -74,6 +74,33 @@ data = {
 }
 
 ```
+
+### cc98.getChildBoard(boardid,callback)
+
+说明:返回版面列表上各子版的信息.
+
+返回数据:形如 `callback(data)` 的格式, `data` 为以下格式的json数据:
+
+```
+{
+        timestamp:new Date(),  //收到数据的时间
+        board:
+        [
+                {
+                        name:String,            //版名
+                        intro:String,
+                        boardid:String,         //版的boardid(用于写URL)
+                        hasChildBoard:Boolean,  //看看有没有子版
+                        boardManager:Array,    //版务
+                        todayPosts:String,      //今日发帖量
+                        totalPosts:String       //总发贴量
+                },
+                
+                ...
+        ]
+}
+```
+
 ### cc98.getAllPostList(boardid,min_page,max_page,callback)
 
 说明: 抓取到某个版块中所有的帖子标题信息.
