@@ -6,22 +6,20 @@ var cc98 = new _98();
 var str = "";
 
 cc98.login(function(data){
-  if(data.status === 1){
+  if(data.status == 1){
+    cc98.getBoard(function(data){
+      var data_arr = data["board"];
 
-    async.waterfall([
+      data_arr.forEach(function(elem,index){
+        console.log(data_arr[index]["name"]);
+        cc98.getChildBoard(data_arr[index]["boardid"],function(data){
+          var a = data["board"];
 
-      // get first level of board
-      function(callback){
-        cc98.getBoard(function(data){
-          callback(null,data);
+          a.forEach(function(elem,index){
+            console.log("  "+a[index]["name"]);
+          });
         });
-      },
-
-      function(data,callback){
-
-      }
-
-
-    ],function(){});
+      });
+    });
   }
 });
