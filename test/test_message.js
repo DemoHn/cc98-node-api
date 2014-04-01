@@ -8,6 +8,18 @@ cc98.login(function(data){
   });
 
   cc98.readUserIndex(function(data){
+//    console.log(data);
+  });
+
+  var content = {
+      boardid:103,
+      subject : "another test",
+      expression : 3,
+      content:"please ignore it",
+      signflag:"yes"
+  };
+
+  cc98.sendNewPost(content,function(data){
     console.log(data);
   });
 });
