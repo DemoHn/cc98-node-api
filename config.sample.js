@@ -1,4 +1,4 @@
-var cc98 = require("./cc98");
+var cc98 = require("./lib/basic");
 
 var config = {
 

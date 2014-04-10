@@ -11,7 +11,7 @@ cc98.login(function(data){
     });*/
 
     cc98.readMessage(23228370,function(data){
-
+	console.log(data);
     });
   }
 });

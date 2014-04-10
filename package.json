@@ -5,7 +5,6 @@
     "dependencies": {
         "request":"latest",
         "cheerio": "latest",
-        "jsdom":"latest",
         "iconv-lite":"latest",
         "underscore":"latest"
     }
