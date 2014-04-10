@@ -2,10 +2,11 @@
     "name": "cc98",
     "version": "0.0.1",
     "private": true,
-    "dependencies": {
+    "dependencies":{
         "request":"latest",
         "cheerio": "latest",
         "iconv-lite":"latest",
-        "underscore":"latest"
+        "underscore":"latest",
+        "async":"latest"
     }
 }
