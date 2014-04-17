@@ -54,7 +54,7 @@
 
 ### cc98.sendMessage(content,callback)
 
-说明：向指定的联系人发送一条站短。
+说明：向指定的联系人发送一条站短。(不想说了，必然要登录！)
 
 参数说明：
 `content`是一个json数据，具体如下：
@@ -75,17 +75,19 @@ content = {
 null : 在发送的过程中间发生了什么错误
 
 
-### cc98.sendMessage(content,callback)
+### cc98.sendNewPost(content,callback)
 
-说明：向指定的联系人发送一条站短。
+说明：发表新的帖子。
 
 参数说明：
 `content`是一个json数据，具体如下：
 ```
 content = {
-    touser: String,     //收件人的名字
-    title: String,      //站短标题
-    message: String     //站短内容
+    boardid: String,     //发表帖子所在的板块名称
+    subject: String,      //主题
+    expression: String     //心情，用数字表示
+    content: String,        //内容(UBB格式)
+    signflag : "yes" || "no" //显示qmd(默认是yes)
 }
 ```
 
@@ -96,4 +98,29 @@ content = {
 0 : 发送成功
 1 : 发送失败
 null : 在发送的过程中间发生了什么错误
+
+
+### cc98.sendFastReply(content,callback)
+
+说明：回复某个帖子(快速回复)。
+
+参数说明：
+`content`是一个json数据，具体如下：
+```
+content = {
+    postID: String,     //帖子所在板块的名称
+    expression: String     //心情，用数字表示
+    content: String,        //内容(UBB格式)
+    signflag : "yes" || "no" //显示qmd(默认是yes)
+}
+```
+
+返回值：
+
+`callback(data)`,其中 `data` 为：
+
+0 : 发送成功
+1 : 发送失败
+null : 在发送的过程中间发生了什么错误
+
 
