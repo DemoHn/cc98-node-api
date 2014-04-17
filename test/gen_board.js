@@ -1,6 +1,6 @@
 var _98 = require("../lib/basic");
 var fs = require("fs");
-var async = require("async");
+
 
 var cc98 = new _98();
 var str = "";

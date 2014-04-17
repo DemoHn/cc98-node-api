@@ -1,12 +1,14 @@
 {
     "name": "cc98",
-    "version": "0.0.1",
+    "version": "0.1",
+    "author":"DemoHn",
+    "description":"This is an API that parses www.cc98.org into useful informations in json.",
     "private": true,
     "dependencies":{
-        "request":"latest",
-        "cheerio": "latest",
-        "iconv-lite":"latest",
-        "underscore":"latest",
-        "async":"latest"
+        "request":"*",
+        "cheerio": "*",
+        "iconv-lite":"*",
+        "underscore":"*",
+        "async":"*"
     }
 }
