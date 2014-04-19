@@ -1,9 +1,9 @@
 {
     "name": "cc98",
-    "version": "0.1",
+    "version": "0.0.1",
     "author":"DemoHn",
     "description":"This is an API that parses www.cc98.org into useful informations in json.",
-    "private": true,
+    "keywords":["cc98","spider"],
     "dependencies":{
         "request":"*",
         "cheerio": "*",
