@@ -3,17 +3,19 @@
 这是一篇有关这个抓取cc98的脚本的API说明.
 
 ## 配置
-1. 进入到主目录后，修改config.sample.js文件，并把它重命名为config.js;
-如果需要登录操作的话，就把自己的cc98帐号和密码给写进去。注意保密。
-
-2. 请运行`npm install` 以补全所有所需要的东西.
+1. 请运行`npm install cc98-node-api` 来安装.
 
 ## 开始
 
 ```
 var _98 = require("./cc98");
 
-var cc98 = new _98();
+var account = {
+    user:, /*your user name*/
+    password:, /*your password*/
+    hash: /*如果能提供它的md5码的话，就写上去.这不是必要的.*/
+}   
+var cc98 = new _98(account);
 
 cc98.login(function(data){
     console.log(data);

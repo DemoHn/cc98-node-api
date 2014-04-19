@@ -1,19 +1,22 @@
-# CC98 API
+# CC98-node-API
 
 这是一篇有关这个抓取cc98的脚本的API说明.
 
 ## 配置
-1. 进入到主目录后，修改config.sample.js文件，并把它重命名为config.js;
-如果需要登录操作的话，就把自己的cc98帐号和密码给写进去。注意保密。
 
-2. 请运行`npm install` 以补全所有所需要的东西.
+- 请运行`npm install cc98-node-api` 来安装.
 
 ## 开始
 
 ```
 var _98 = require("./cc98");
 
-var cc98 = new _98();
+var account = {
+    user:, /*your user name*/
+    password:, /*your password*/
+    hash: /*如果能提供它的md5码的话，就写上去.这不是必要的.*/
+}   
+var cc98 = new _98(account);
 
 cc98.login(function(data){
     console.log(data);
@@ -24,7 +27,8 @@ cc98.login(function(data){
 
 ### cc98.login(callback)
 
-说明:用自己的帐号登录cc98.虽然做为一名游客,API仍就能够正常工作.
+说明:用自己的帐号登录cc98.
+如果跳过这一步，以游客身份访问cc98的话，只有部分功能能够工作．
 请注意自己的配置设置.
 
 此函数会调用形如 `callback(data)` 的函数,其中data是一个json变量:
