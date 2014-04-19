@@ -1,8 +1,8 @@
 var _98 = require("../lib/basic");
+var uc = require("./user_config");
+var cc98 = new _98(uc);
 
-var cc98 = new _98();
-
-//without login 
+//without login
 cc98.getBoard(function(data){
     console.log("\n===TEST 01: getBoard without login===\n");
     console.log(data.board[0]);
@@ -20,7 +20,7 @@ cc98.getBoard(function(data){
                     console.log("\n===TEST 04: Top10 without login===\n");
                     console.log(data.posts[0]);
 
-                    //with login 
+                    //with login
 cc98.login(function(){
     console.log("\nIf there is any problem, please check if account settings is available.\n");
     cc98.getBoard(function(data){
@@ -48,6 +48,3 @@ cc98.login(function(){
         });
     });
 });
-
-
-

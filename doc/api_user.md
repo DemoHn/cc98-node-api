@@ -109,6 +109,7 @@ null : 在发送的过程中间发生了什么错误
 ```
 content = {
     postID: String,     //帖子所在板块的名称
+    boardid: String,    //所在板块的名称
     expression: String     //心情，用数字表示
     content: String,        //内容(UBB格式)
     signflag : "yes" || "no" //显示qmd(默认是yes)

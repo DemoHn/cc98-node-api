@@ -1,6 +1,6 @@
 var _98 = require("../lib/basic");
-
-var cc98 = new _98();
+var uc = require("./user_config");
+var cc98 = new _98(uc);
 
 cc98.login(function(data){
   cc98.readMailbox(1,function(data){

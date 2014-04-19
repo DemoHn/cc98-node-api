@@ -1,18 +1,17 @@
 # CC98-node-API
 
-这是一个用来抓取cc98帖子的脚本.
+这是一个用来抓取cc98帖子的脚本.  
+
 [由于cc98只能在浙江大学内网访问，所以此API只能在能访问浙江大学内网的机子上使用．]
 
 ## 配置
-
+- 本API基于 `Node.js`,运行时需要在Node.js的环境下．  
 - 请运行`npm install cc98-node-api` 来安装.
- `> 什么？运行不了？｀
- `> 那请确认一下您是不是安装了一个叫作Node.js的东西．．．`
- 
+
 ## 开始
 
 ```
-var _98 = require("./cc98");
+var _98 = require("cc98-node-api");
 
 var account = {
     user:, /*your user name*/
