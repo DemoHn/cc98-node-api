@@ -1,14 +1,17 @@
-# CC98 API
+# CC98-node-API
 
-这是一篇有关这个抓取cc98的脚本的API说明.
+这是一个用来抓取cc98帖子的脚本.  
+
+[由于cc98只能在浙江大学内网访问，所以此API只能在能访问浙江大学内网的机子上使用．]
 
 ## 配置
-1. 请运行`npm install cc98-node-api` 来安装.
+- 本API基于 `Node.js`,运行时需要在Node.js的环境下．  
+- 请运行`npm install cc98-node-api` 来安装.
 
 ## 开始
 
 ```
-var _98 = require("./cc98");
+var _98 = require("cc98-node-api");
 
 var account = {
     user:, /*your user name*/
@@ -26,7 +29,8 @@ cc98.login(function(data){
 
 ### cc98.login(callback)
 
-说明:用自己的帐号登录cc98.虽然做为一名游客,API仍就能够正常工作.
+说明:用自己的帐号登录cc98.
+如果跳过这一步，以游客身份访问cc98的话，只有部分功能能够工作．
 请注意自己的配置设置.
 
 此函数会调用形如 `callback(data)` 的函数,其中data是一个json变量:
@@ -171,7 +175,8 @@ data = {
                                 author:****,
                                 face:****,
                                 subTitle:****,
-                                info:****
+                                info:****,
+                                qmd:***
                         },
 
                         ...
@@ -191,7 +196,7 @@ __附注:__ 这里稍微说明一下list中各参数的含义:
 
 `subTitle` : 紧接着face后面的小标题.一般除了首楼上会发这个玩意儿之外别的楼都不会发.<br>
 `info`     : 帖子的内容.注意是UBB格式.<br>
-
+`qmd`      : 签名档<br>
 
 ### cc98.Top10(callback)
 

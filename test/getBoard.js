@@ -34,7 +34,7 @@ cc98.getBoard(function(data){
 
               cc98.getPostInfo(100,4360410,1,1,function(data){
                 console.log("\n===TEST 07: getChildBoard logged===\n");
-                console.log(data[1]["list"][0]);
+                console.log(data[1]["list"][2]);
 
                 cc98.Top10(function(data){
                   console.log("\n===TEST 08: Top10 logged===\n");

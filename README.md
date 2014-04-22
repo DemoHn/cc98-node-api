@@ -175,7 +175,8 @@ data = {
                                 author:****,
                                 face:****,
                                 subTitle:****,
-                                info:****
+                                info:****,
+                                qmd:***
                         },
 
                         ...
@@ -195,7 +196,7 @@ __附注:__ 这里稍微说明一下list中各参数的含义:
 
 `subTitle` : 紧接着face后面的小标题.一般除了首楼上会发这个玩意儿之外别的楼都不会发.<br>
 `info`     : 帖子的内容.注意是UBB格式.<br>
-
+`qmd`      : 签名档<br>
 
 ### cc98.Top10(callback)
 
