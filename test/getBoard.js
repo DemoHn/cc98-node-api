@@ -23,6 +23,10 @@ cc98.getBoard(function(data){
         //with login
         cc98.login(function(){
           console.log("\nIf there is any problem, please check if account settings is available.\n");
+
+          cc98.getAllPostList(100,1,1,function(data){
+            console.log(data[1].list[0]);
+          });
           cc98.getBoard(function(data){
             console.log("\n===TEST 05: getBoard logged===\n");
             console.log(data.board[0]);

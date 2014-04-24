@@ -121,7 +121,7 @@ data = {
 
 ```
 [
-        {totalPages:***,todayPosts:***,boardid:***},
+        {totalPages:***,todayPosts:***,boardid:***,totalPosts:***},
         
         {
                 timestamp:new Date(),
@@ -136,7 +136,8 @@ data = {
                                 author:*****,
                                 replyNum:****,
                                 visitNum:****,
-                                lastReply:new Date()
+                                lastReply:new Date(),
+                                replier:****
                         },
 
                         ...
