@@ -1,6 +1,6 @@
 {
     "name": "cc98-node-api",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "author":"DemoHn",
     "description":"This is an API that parses www.cc98.org into useful informations in json.",
     "keywords":["cc98","spider"],
