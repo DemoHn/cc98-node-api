@@ -32,12 +32,11 @@ var profile = {
 };
 
 cc98.login(function(data){
-  cc98.readMyIndex(function(data){
+  cc98.readMyProfile(function(data){
     console.log("\nTEST 01: readMyIndex:\n");
-    console.log(data);
+//    console.log(data);
 
-    cc98.settingProfile(profile,function(data){
-      console.log("\nTEST 02: settingProfile\n");
+    cc98.readUserProfile("name","demohn",function(data){
       console.log(data);
     });
   });
