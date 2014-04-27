@@ -12,7 +12,22 @@ cc98.login(function(data){
     signflag:"no"
   };
 
-  cc98.sendFastReply(content,function(data){
+/*  cc98.sendFastReply(content,function(data){
+    console.log(data);
+  });*/
+
+  var contents = {
+    postID: 4365227,
+    boardid:39,
+    expression:7,
+    subject:"!!!",
+    content:"好可怕的样子！(chrome党路过)",
+    signflag:"no",
+    sendSMS:1
+  };
+
+
+  cc98.sendTopicReply(contents,function(data){
     console.log(data);
   });
 });

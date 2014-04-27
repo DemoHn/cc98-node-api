@@ -174,6 +174,7 @@ data = {
                         {
                                 postTime:new Date(),
                                 author:****,
+                                authorFaceURL:****,
                                 face:****,
                                 subTitle:****,
                                 info:****,
