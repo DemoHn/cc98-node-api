@@ -25,7 +25,30 @@ cc98.login(function(data){
 });
 
 ```
+
+## 测试此API
+
+首先进入 `test/` 文件夹，创建一个名为user_config.js的文件，写入一下代码：
+
+```
+module.exports = {
+    user:, /*your user name*/
+    password:, /*your password*/  
+}
+```
+
+然后用node运行此目录下任意一个文件即可得到测试结果。
+(注意，有些数据(如读站短的ID)要根据自己的情况在源代码里修改。)
+
 ## 函数说明
+
+以下仅摘录部分api,完整的api请参阅下面链接：
+
+- [api_basic.md](https://github.com/DemoHn/cc98-node-api/blob/master/doc/api_basic.md) --基本的API,如读取帖子列表，读取今日十大等等。
+- [api_search.md](https://github.com/DemoHn/cc98-node-api/blob/master/doc/api_search.md) --帖子搜索有关的API。
+- [api_user.md](https://github.com/DemoHn/cc98-node-api/blob/master/doc/api_user.md) --与用户操作有关的API,如发帖，读站短，定制版块等等。
+- [api_user_profile.md](https://github.com/DemoHn/cc98-node-api/blob/master/doc/api_user_profile.md) --修改用户个人信息的API。
+
 
 ### cc98.login(callback)
 

@@ -125,3 +125,6 @@ content = {
 null : 在发送的过程中间发生了什么错误
 
 
+### cc98.customizeBoard(boardid,callback)
+
+说明： 个人定制版块

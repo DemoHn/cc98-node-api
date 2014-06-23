@@ -1,3 +1,7 @@
+/*快速回复测试
+  请不要随意运行此脚本，否则TP自负
+*/
+
 var _98 = require("../lib/basic");
 var uc = require("./user_config");
 
@@ -12,9 +16,6 @@ cc98.login(function(data){
     signflag:"no"
   };
 
-/*  cc98.sendFastReply(content,function(data){
-    console.log(data);
-  });*/
 
   var contents = {
     postID: 4365227,
@@ -29,5 +30,9 @@ cc98.login(function(data){
 
   cc98.sendTopicReply(contents,function(data){
     console.log(data);
+
+    cc98.sendFastReply(content,function(d){
+      console.log(d);
+    });
   });
 });
