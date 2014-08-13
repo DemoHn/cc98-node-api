@@ -1,14 +1,18 @@
 {
-    "name": "cc98-node-api",
-    "version": "0.1.6",
-    "author":"DemoHn",
-    "description":"This is an API that parses www.cc98.org into useful informations in json.",
-    "keywords":["cc98","spider"],
-    "dependencies":{
-        "request":"*",
-        "cheerio": "*",
-        "iconv-lite":"*",
-        "underscore":"*",
-        "async":"*"
-    }
+  "name": "cc98-node-api",
+  "version": "0.1.6",
+  "author": "DemoHn",
+  "description": "This is an API that parses www.cc98.org into useful informations in json.",
+  "keywords": [
+    "cc98",
+    "spider"
+  ],
+  "dependencies": {
+    "request": "*",
+    "cheerio": "*",
+    "iconv-lite": "*",
+    "underscore": "*",
+    "async": "*",
+    "express": "^4.4.4"
+  }
 }
