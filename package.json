@@ -1,6 +1,6 @@
 {
   "name": "cc98-node-api",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "author": "DemoHn",
   "description": "This is an API that parses www.cc98.org into useful informations in json.",
   "keywords": [
@@ -12,7 +12,5 @@
     "cheerio": "*",
     "iconv-lite": "*",
     "underscore": "*",
-    "async": "*",
-    "express": "^4.4.4"
-  }
+    "async": "*"  }
 }
