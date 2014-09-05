@@ -136,7 +136,8 @@ data = {
                                 author:*****,
                                 replyNum:****,
                                 visitNum:****,
-                                lastReply:new Date()
+                                lastReply:new Date(),
+                                replier:*****
                         },
 
                         ...
