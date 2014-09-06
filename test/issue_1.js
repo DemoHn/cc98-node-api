@@ -8,5 +8,5 @@ cc98.login(function(){
       //  console.log(data[1].list);
     });
 
-    cc98.uploadFile("duniang.jpg");
+    cc98.uploadFile("a.mp4");
 })
