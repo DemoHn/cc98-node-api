@@ -8,5 +8,7 @@ cc98.login(function(){
       //  console.log(data[1].list);
     });
 
-    cc98.uploadFile("a.mp4");
+    cc98.uploadFile("a.gif",198,function(msg,url){
+        console.log(url);
+    });
 })
