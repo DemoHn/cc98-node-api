@@ -33,10 +33,10 @@ var profile = {
 
 cc98.login(function(data){
   cc98.readMyProfile(function(data){
-    console.log("\nTEST 01: readMyIndex:\n");
+//    console.log("\nTEST 01: readMyIndex:\n");
 //    console.log(data);
 
-    cc98.readUserProfile("name","demohn",function(data){
+    cc98.readUserProfile("name","DHL快递",function(data){
       console.log(data);
     });
   });
