@@ -17,6 +17,7 @@ cc98.login(function(data){
 
         // set first-level-board's name
         board[ data_arr[j]["boardid"] ]['name'] = data_arr[j]["name"];
+        board[ data_arr[j]["boardid"] ]['intro'] = data_arr[j]["intro"];
       }
 
       //second level boards
@@ -30,6 +31,7 @@ cc98.login(function(data){
             board[""+id][""+ data[k]["boardid"] ] = {};
 
             board[""+id][""+ data[k]["boardid"] ]["name"] = data[k]["name"];
+            board[""+id][""+ data[k]["boardid"] ]["intro"] = data[k]["intro"];
           }
 
           callback();
@@ -47,7 +49,7 @@ function ThirdLevel(data_json){
 
   for(var i in data_json){
     for(var j in data_json[i]){
-      if(j != "name"){
+      if(j != "name" && j != "intro"){
         var obj = {
             i : i,
             j : j
@@ -67,6 +69,7 @@ function ThirdLevel(data_json){
         for(var l in data){
           board[""+i][""+j][ data[l]["boardid"] ] = {};
           board[""+i][""+j][ data[l]["boardid"] ]['name'] = data[l]['name'];
+          board[""+i][""+j][ data[l]["boardid"] ]['intro'] = data[l]['intro'];
         }
       }
 
@@ -79,6 +82,6 @@ function ThirdLevel(data_json){
       if(err){
         console.log(err);
       }
-    })
+    });
   });
 }
