@@ -78,7 +78,7 @@ function ThirdLevel(data_json){
   },function(err){
     var content = JSON.stringify(board,null,4);
     // write the json into a file
-    fs.writeFile(__dirname+"/../data/board.list.json",content,{encoding:"utf-8"},function(err){
+    fs.writeFile(__dirname+"/../data/board.tree.json",content,{encoding:"utf-8"},function(err){
       if(err){
         console.log(err);
       }
