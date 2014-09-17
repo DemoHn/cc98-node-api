@@ -12,9 +12,6 @@ cc98.getBoard(function(data){
     console.log("\n===TEST 02: getChildBoard without login===\n");
     console.log(data.board[0]);
 
-    cc98.getPostInfo(357,4411365,1,1,function(data){
-      console.log("\n===TEST 03: getChildBoard without login===\n");
-      console.log(data[1]["list"][0]);
 
       cc98.Top10(function(data){
         console.log("\n===TEST 04: Top10 without login===\n");
@@ -36,7 +33,7 @@ cc98.getBoard(function(data){
               console.log("\n===TEST 06: getChildBoard logged===\n");
               console.log(data.board[0]);
 
-              cc98.getPostInfo(100,4360410,1,1,function(data){
+              cc98.getPostInfo(537,4420762,1,1,function(data){
                 console.log("\n===TEST 07: getChildBoard logged===\n");
                 console.log(data[1]["list"][2]);
 
@@ -47,7 +44,6 @@ cc98.getBoard(function(data){
               });
             });
           });
-        });
       });
     });
   });
