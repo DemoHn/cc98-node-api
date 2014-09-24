@@ -132,6 +132,7 @@ data = {
                         {
                                 topicName:****,
                                 topicStatus:****,
+                                boardId:***** // 有些帖子所在的boardid并不是本板块ID(如缘分天空的全站置顶帖)
                                 postId:*****,
                                 author:*****,
                                 replyNum:****,
@@ -174,10 +175,12 @@ data = {
                         {
                                 postTime:new Date(),
                                 author:****,
+                                authorFaceURL:****,
                                 face:****,
                                 subTitle:****,
                                 info:****,
-                                qmd:***
+                                qmd:***,
+                                replyID:***
                         },
 
                         ...

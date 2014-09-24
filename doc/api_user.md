@@ -124,6 +124,32 @@ content = {
 0 : 发送失败
 null : 在发送的过程中间发生了什么错误
 
+### cc98.sendFastReply(content,callback)
+
+说明：回复某个帖子(回复楼主)。
+
+参数说明：
+`content`是一个json数据，具体如下：
+```
+content = {
+    postID: String,     //帖子所在板块的名称
+    boardid: String,    //所在板块的名称
+    expression: String     //心情，用数字表示
+    content: String,        //内容(UBB格式)
+    signflag : "yes" || "no"， //显示qmd(默认是yes)
+    subject: String，  // 回帖主题
+    sendSMS:0 || 1 //1 为发送站短回复，0为不发送
+}
+```
+
+返回值：
+
+`callback(data)`,其中 `data` 为：
+
+1 : 发送成功
+0 : 发送失败
+null : 在发送的过程中间发生了什么错误
+
 
 ### cc98.customizeBoard(boardid,callback)
 
